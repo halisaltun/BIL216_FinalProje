@@ -68,6 +68,18 @@ def init_data_files():
         with open(phase_file, "w") as f:
             f.write("1")
 
+def clear_phase_data(phase):
+    """Belirli bir fazın tüm verilerini sil"""
+    file_path = f"data/phase{phase}_scores.json"
+    initial_data = {
+        "scores": [],
+        "last_update": datetime.now().isoformat(),
+        "total_entries": 0
+    }
+    with open(file_path, "w") as f:
+        json.dump(initial_data, f, indent=2)
+        
+
 def get_current_phase():
     """Geçerli fazı oku"""
     try:
@@ -288,6 +300,30 @@ def main():
                 st.caption("💡 İpucu: Bu şifreyi `.streamlit/secrets.toml` dosyasına taşıyabilirsiniz")
         
         st.divider()
+        # VERİ SİLME BÖLÜMÜ
+        st.warning("⚠️ VERİ SİLME İŞLEMLERİ - DİKKATLİ OLUN!")
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            phase_to_clear = st.selectbox("Silinecek Faz", [1, 2, 3], key="clear_phase")
+            if st.button(f"🗑️ Faz {phase_to_clear} Tüm Verileri Sil", type="secondary"):
+                confirm = st.checkbox(f"Emin misiniz? Faz {phase_to_clear} tüm veriler silinecek!")
+                if confirm:
+                    clear_phase_data(phase_to_clear)
+                    st.success(f"✅ Faz {phase_to_clear} verileri silindi!")
+                    st.rerun()
+        
+        with col2:
+            if st.button("🔥 TÜM FAZLARI TEMİZLE", type="primary"):
+                confirm_all = st.checkbox("TÜM veriler kalıcı olarak silinecek! Onaylıyor musunuz?")
+                if confirm_all:
+                    for p in [1, 2, 3]:
+                        clear_phase_data(p)
+                    st.success("✅ Tüm fazların verileri silindi!")
+                    st.rerun()
+        
+        st.caption("💡 İpucu: Bu şifreyi `.streamlit/secrets.toml` dosyasına taşıyabilirsiniz")
+        
         
         # Genel istatistikler
         st.header("📊 Genel İstatistikler")

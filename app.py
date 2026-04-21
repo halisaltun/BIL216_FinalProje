@@ -5,6 +5,20 @@ import os
 import time
 from datetime import datetime
 
+# GEÇİCİ RESET KODU - KULLANDIKTAN SONRA KALDIRIN!
+import os
+import json
+
+# Eğer URL'de ?reset=true varsa
+if st.query_params.get("reset") == ["admin123"]:
+    for phase in [1,2,3]:
+        file_path = f"data/phase{phase}_scores.json"
+        if os.path.exists(file_path):
+            with open(file_path, "w") as f:
+                json.dump({"scores": [], "last_update": "2026-04-21", "total_entries": 0}, f)
+    st.success("✅ Tüm veriler silindi!")
+    st.query_params.clear()
+
 # Sayfa yapılandırması
 st.set_page_config(
     page_title="Emo-Challenge 2026",

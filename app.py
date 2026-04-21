@@ -472,6 +472,12 @@ def main():
                 use_container_width=True,
                 height=400
             )
+
+            st.dataframe(
+                df.style.set_properties(**{'background-color': 'white', 'color': 'black'})
+                  .highlight_max(axis=0, subset=["Doğruluk (%)"], color='#90EE90'),
+                use_container_width=True
+)
             
             # İstatistikler
             col1, col2, col3, col4 = st.columns(4)
